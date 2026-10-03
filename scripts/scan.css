@@ -1,0 +1,250 @@
+/* ═══════════════════════════════════════════════════════════════
+   Barcode scanner + AI meal scan — the prototype's camera treatment.
+   Append to src/index.css, after screens.css.
+
+   Both flows already work in your app. This is purely how they look:
+   a dark camera well with a sweep line, and a result that reads as a
+   card rather than a toast above a form.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Shared camera well ─────────────────────────────────────── */
+
+.barcode-video-wrap,
+.meal-scan-dropzone,
+.meal-scan-preview img {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.barcode-scanner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.barcode-video-wrap {
+  position: relative;
+  background: #14120e;
+  aspect-ratio: 4 / 3;
+}
+
+.barcode-video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The reticle and the sweep. Both are decorative overlays on the
+   wrapper, so they cost nothing and can't interfere with the decode
+   loop underneath. */
+.barcode-video-wrap::before {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 50%;
+  height: 96px;
+  transform: translateY(-50%);
+  border: 2px solid rgba(251, 247, 239, 0.34);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.barcode-video-wrap::after {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 16px 3px color-mix(in srgb, var(--accent) 65%, transparent);
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 3;
+  animation: scan-sweep 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes scan-sweep {
+  from {
+    top: 34%;
+  }
+  to {
+    top: 66%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barcode-video-wrap::after {
+    animation: none;
+    top: 50%;
+  }
+}
+
+.barcode-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 12.5px;
+  opacity: 0.8;
+}
+
+/* ── AI meal scan ───────────────────────────────────────────── */
+
+.meal-scan-dropzone {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  background: var(--accent-bg);
+  border: 2px dashed color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: none;
+}
+
+.meal-scan-dropzone:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color: var(--accent);
+  transform: none;
+  box-shadow: none;
+}
+
+/* A camera glyph above the label, drawn in CSS so there's no icon
+   import to wire up. */
+.meal-scan-dropzone::before {
+  content: '';
+  width: 62px;
+  height: 62px;
+  border-radius: 999px;
+  background: var(--card-bg)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f8a3e' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8h3l1.5-2.5h7L17 8h3v11H4z'/%3E%3Ccircle cx='12' cy='13.5' r='3.4'/%3E%3C/svg%3E")
+    center / 26px no-repeat;
+  box-shadow: var(--shadow-sm);
+}
+
+/* While the model loads or classifies, the dropzone is a status
+   surface, not a button. */
+.meal-scan-dropzone:disabled {
+  opacity: 1;
+  border-style: solid;
+  border-color: var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.meal-scan-dropzone:disabled::before {
+  animation: scan-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes scan-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meal-scan-dropzone:disabled::before {
+    animation: none;
+  }
+}
+
+.meal-scan-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.meal-scan-preview img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── The recognition result ─────────────────────────────────────
+   Your markup reuses .toast for this. A toast is a transient
+   notification; this is a persistent result you act on. Add
+   className="scan-result" alongside it (see README step 13) and it
+   becomes a card. */
+
+.scan-result {
+  position: static;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 16px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.scan-result-confidence {
+  flex: none;
+  align-self: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.scan-result strong {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--text-h);
+  margin-bottom: 3px;
+}
+
+/* ── Mobile: both flows go full-width and thumb-sized ───────── */
+
+@media (max-width: 860px) {
+  .barcode-video-wrap,
+  .meal-scan-dropzone,
+  .meal-scan-preview img {
+    aspect-ratio: 1 / 1;
+  }
+
+  /* The three-up "meal type / calories / servings" row is unusable
+     at 390px — stack it. */
+  .quick-add-form .form-row {
+    grid-template-columns: 1fr;
+    display: grid;
+    gap: 12px;
+  }
+
+  .quick-add-form .form-actions,
+  .meal-scan-preview button {
+    display: flex;
+    gap: 9px;
+  }
+
+  .quick-add-form .form-actions button {
+    flex: 1;
+    min-height: 48px;
+  }
+}
+
+.settings-logout {
+  width: 100%;
+  min-height: 48px;
+}

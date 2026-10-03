@@ -1,0 +1,207 @@
+/* ═══════════════════════════════════════════════════════════════
+   B — The Organic visual swap.
+   Caprasimo everywhere, cream ground, your green kept as accent,
+   light-only.
+
+   Paste this FIRST, immediately after the :root block in
+   src/index.css — before .navbar and everything below it. These are
+   token overrides, so they must land before the rules that read them.
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Ground: Organic's cream, not white-on-off-white. The radial
+     warmth stays — it is the one thing your app and Organic agree on. */
+  --bg: #f5ead8;
+  --bg-grad: radial-gradient(1200px 600px at 100% -10%, rgba(198, 113, 57, 0.13), transparent 60%),
+    radial-gradient(1000px 700px at -10% 10%, rgba(79, 138, 62, 0.1), transparent 55%), #f5ead8;
+  --card-bg: #fbf7ef;
+  --border: #e2d6be;
+
+  --text: #4a4438;
+  --text-h: #201e1d;
+
+  /* Your green, unchanged — it is the brand. Organic's terracotta
+     becomes the SECOND voice only (over-goal, symptoms, warnings). */
+  --accent: #4f8a3e;
+  --accent-hover: #416f33;
+  --accent-bg: rgba(79, 138, 62, 0.13);
+  --accent-grad: linear-gradient(135deg, #5b9c47, #3f7a3a);
+  --accent-2: #c67139;
+  --danger: #b2622d;
+  --danger-bg: rgba(178, 98, 45, 0.12);
+
+  /* Organic's soft ink shadows — warmer and tighter than yours. */
+  --shadow-sm: 0 1px 2px rgba(46, 43, 37, 0.14);
+  --shadow: 0 3px 10px rgba(46, 43, 37, 0.16);
+  --shadow-lg: 0 12px 32px rgba(46, 43, 37, 0.22);
+
+  /* "Round everything." This is most of what makes Organic read as
+     Organic — bigger than your current 8/14/20. */
+  --radius-sm: 12px;
+  --radius: 20px;
+  --radius-lg: 28px;
+
+  /* Chart palette warmed toward the cream ground. Contrast floors
+     re-checked against #f5ead8 and against each other. */
+  --chart-breakfast: #c98c2a;
+  --chart-lunch: #2f8f6f;
+  --chart-dinner: #7a4fb5;
+  --chart-dessert: #c15c93;
+  --chart-other: #9a9080;
+
+  --sans: 'Figtree', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --serif: 'Caprasimo', Georgia, serif;
+
+  color-scheme: light;
+}
+
+/* Dark mode dropped, per your call. Organic ships no dark variant and a
+   derived one would be a guess. This neutralises the block that is
+   already in your file — leave that block in place, this wins on order.
+   If you ever want dark back, delete this rule and restore the tokens. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #4a4438;
+    --text-h: #201e1d;
+    --bg: #f5ead8;
+    --bg-grad: radial-gradient(1200px 600px at 100% -10%, rgba(198, 113, 57, 0.13), transparent 60%),
+      radial-gradient(1000px 700px at -10% 10%, rgba(79, 138, 62, 0.1), transparent 55%), #f5ead8;
+    --card-bg: #fbf7ef;
+    --border: #e2d6be;
+    --accent: #4f8a3e;
+    --accent-2: #c67139;
+    --accent-hover: #416f33;
+    --accent-bg: rgba(79, 138, 62, 0.13);
+    --accent-grad: linear-gradient(135deg, #5b9c47, #3f7a3a);
+    --danger: #b2622d;
+    --danger-bg: rgba(178, 98, 45, 0.12);
+    --shadow-sm: 0 1px 2px rgba(46, 43, 37, 0.14);
+    --shadow: 0 3px 10px rgba(46, 43, 37, 0.16);
+    --shadow-lg: 0 12px 32px rgba(46, 43, 37, 0.22);
+    --chart-breakfast: #c98c2a;
+    --chart-lunch: #2f8f6f;
+    --chart-dinner: #7a4fb5;
+    --chart-dessert: #c15c93;
+    --chart-other: #9a9080;
+  }
+}
+
+/* ── Caprasimo everywhere ───────────────────────────────────────
+   Caprasimo has one weight (400) and no italic. Asking for 600 gets
+   you a synthesised fake-bold, which on a display face looks like a
+   printing error — so weight is pinned to 400 and the negative
+   tracking your Fraunces headings used is relaxed. */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.card-title,
+.navbar-brand,
+.stats-card-header h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.12;
+}
+
+/* Caprasimo runs large for its point size — pull the scale back so
+   headings do not swallow the screen. */
+h1 {
+  font-size: 27px;
+}
+
+h2 {
+  font-size: 21px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+/* Big numerals are where this face earns its keep. */
+.calorie-ring-centre strong,
+.onboarding-hero strong,
+.onboarding-stepper strong,
+.day-cell-num,
+.stat-value,
+.portion-stepper input {
+  font-family: var(--serif);
+  font-weight: 400;
+}
+
+/* Organic puts its display face on buttons too. Small caps-height
+   labels in Caprasimo get muddy, so bump size and tracking slightly. */
+button,
+.tab {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Except where the label is long or the control is dense — those stay
+   in Figtree, which is what it is for. */
+.recipe-card-actions a,
+.severity-pill,
+.pattern-strength,
+.sheet-option-sub,
+label,
+input,
+select,
+textarea {
+  font-family: var(--sans);
+}
+
+/* ── Round everything ───────────────────────────────────────────
+   Organic's rule: containers soften, small controls go fully pill. */
+
+button,
+.tab,
+.calorie-badge,
+.onboarding-chip,
+.severity-pill,
+.pattern-strength,
+.tab-count {
+  border-radius: 999px;
+}
+
+button {
+  padding: 11px 20px;
+}
+
+input,
+select,
+textarea {
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+}
+
+.card,
+.stats-card,
+.recipe-card,
+.auth-card,
+.calorie-ring-card,
+.sheet,
+.sheet-option {
+  border-radius: var(--radius-lg);
+}
+
+/* The auth card's top bar was a hard 6px edge; on a 28px radius it
+   needs to follow the curve or it clips into a wedge. */
+.auth-card::before {
+  height: 5px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* ── Body type ──────────────────────────────────────────────────
+   Figtree sits slightly smaller than Inter at the same size. */
+
+body {
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+}

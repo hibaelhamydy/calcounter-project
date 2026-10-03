@@ -1,0 +1,38 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+.env
+
+# Firebase CLI local cache (hosting deploy cache, emulator data, etc.)
+.firebase
+firebase-debug.log
+firestore-debug.log
+
+# Claude Code local settings (machine-specific tool permissions)
+.claude/settings.local.json
+
+# Demo recording: 46MB and not meant for version control. Trim/re-record
+# and host it separately (see README), or add via Git LFS if you want it
+# versioned here.
+calcount.mp4
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

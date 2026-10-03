@@ -1,0 +1,476 @@
+/* ═══════════════════════════════════════════════════════════════
+   Day strip, onboarding, pattern cards, portion stepper.
+   Append to src/index.css AFTER mobile.css.
+   ═══════════════════════════════════════════════════════════════ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Day strip ──────────────────────────────────────────────── */
+
+.day-strip-wrap {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.day-strip {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  touch-action: pan-y;
+}
+
+.day-cell {
+  flex: 1;
+  min-width: 0;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 6px 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+}
+
+.day-cell:hover {
+  background: var(--accent-bg);
+}
+
+.day-cell:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.day-cell-dow {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.62;
+}
+
+.day-cell-num {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-h);
+}
+
+.day-cell-dot {
+  width: 4px;
+  height: 4px;
+  margin-top: 2px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.day-cell-dot.logged {
+  background: var(--accent);
+}
+
+.day-cell.today {
+  border-color: var(--border);
+}
+
+.day-cell.selected {
+  background: var(--accent-grad);
+  border-color: transparent;
+}
+
+.day-cell.selected .day-cell-num,
+.day-cell.selected .day-cell-dow {
+  color: #fff;
+  opacity: 1;
+}
+
+.day-cell.selected .day-cell-dot.logged {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.day-strip-picker {
+  position: relative;
+  flex: none;
+  width: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.day-strip-picker svg {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.day-strip-picker input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.day-strip-picker:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Onboarding ─────────────────────────────────────────────── */
+
+.onboarding {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 40px 24px calc(32px + env(safe-area-inset-bottom));
+  background: var(--bg-grad);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.onboarding-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.onboarding-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.onboarding-step {
+  width: 100%;
+  animation: onboarding-rise 0.4s ease both;
+}
+
+.onboarding-step h1 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  line-height: 1.12;
+  color: var(--text-h);
+}
+
+.onboarding-step p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  opacity: 0.85;
+}
+
+.onboarding-hero {
+  width: 170px;
+  height: 170px;
+  margin: 0 auto 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 2px dashed var(--accent-bg);
+  box-shadow: var(--shadow);
+}
+
+.onboarding-hero strong {
+  font-family: var(--serif);
+  font-size: 42px;
+  line-height: 1;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.onboarding-hero span {
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.onboarding-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.onboarding-stepper button {
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  font-size: 22px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--accent-bg);
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.onboarding-stepper span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.onboarding-stepper strong {
+  font-family: var(--serif);
+  font-size: 38px;
+  line-height: 1;
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.onboarding-stepper small {
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.onboarding-hint {
+  margin-top: 18px !important;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-bg);
+  font-size: 13px !important;
+}
+
+.onboarding-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 22px;
+}
+
+.onboarding-chip {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.onboarding-chip.active {
+  background: var(--accent-grad);
+  border-color: transparent;
+  color: #fff;
+}
+
+.onboarding-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.onboarding-dots {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+}
+
+.onboarding-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  transition: width 0.25s ease;
+}
+
+.onboarding-dots span.active {
+  width: 26px;
+  background: var(--accent);
+}
+
+.onboarding-cta {
+  width: 100%;
+  min-height: 54px;
+  font-size: 16px;
+}
+
+@keyframes onboarding-rise {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-step {
+    animation: none;
+  }
+}
+
+/* ── Pattern cards ──────────────────────────────────────────── */
+
+.pattern-window {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.pattern-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pattern-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.pattern-strength {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.pattern-strength.warn {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.pattern-strength.calm {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.pattern-food {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.pattern-bar {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.pattern-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.pattern-bar-fill.warn {
+  background: linear-gradient(135deg, var(--accent-2), var(--danger));
+}
+
+.pattern-bar-fill.calm {
+  background: var(--accent-grad);
+}
+
+.pattern-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.88;
+}
+
+.pattern-disclaimer {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px;
+  line-height: 1.5;
+  opacity: 0.72;
+}
+
+/* ── Portion stepper ────────────────────────────────────────── */
+
+.portion-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.portion-stepper-label {
+  flex: 1;
+  font-size: 13px;
+}
+
+.portion-stepper button {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--accent-bg);
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.portion-stepper button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.portion-stepper input {
+  width: 64px;
+  flex: none;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 18px;
+  -moz-appearance: textfield;
+}
+
+.portion-stepper input::-webkit-outer-spin-button,
+.portion-stepper input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

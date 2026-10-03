@@ -1,0 +1,435 @@
+/* ═══════════════════════════════════════════════════════════════
+   A — The four remaining screens, brought up to the prototype.
+   Recipes, recipe detail, community, settings.
+
+   Append to src/index.css, LAST — after mobile-extras.css.
+
+   Your markup already has the right bones (gradient placeholders,
+   floating calorie badge, tabs with counts). Most of this is
+   proportion and density, not new structure. Only the settings
+   rows and the macro bars need JSX, and those diffs are in the README.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Recipe + community cards ───────────────────────────────── */
+
+.recipe-grid {
+  gap: 16px;
+}
+
+@media (max-width: 860px) {
+  /* One column on a phone. Two 150px-wide cards is worse than one
+     good one — the prototype is a single stack. */
+  .recipe-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .recipe-card-media {
+    aspect-ratio: 21 / 10;
+  }
+}
+
+.recipe-card-placeholder {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* The prototype's badge is light-on-card, not a dark scrim — it reads
+   as a data point rather than a photo caption. */
+.calorie-badge-floating {
+  top: 12px;
+  right: 14px;
+  background: rgba(251, 247, 239, 0.93);
+  color: var(--accent);
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-sm);
+}
+
+.recipe-card-body {
+  padding: 15px 18px 17px;
+  gap: 6px;
+}
+
+.recipe-card-header h3 {
+  font-size: 19px;
+  line-height: 1.15;
+}
+
+.recipe-author {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text);
+  opacity: 0.72;
+}
+
+/* Community: the author needs a face, however small. An initial in a
+   circle is enough to make a shared recipe feel like it came from a
+   person rather than a database. */
+.recipe-author-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 2px 0 4px;
+}
+
+.recipe-author-avatar {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-2) 22%, transparent);
+  color: var(--accent-2);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.recipe-notes {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.88;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.recipe-card-actions {
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.recipe-card-actions button {
+  padding: 10px 16px;
+  font-size: 13.5px;
+}
+
+/* "Log to today" is the one thing you do from this card. Give it the
+   room and let Edit/Delete sit as quiet text. */
+.recipe-card-actions button:first-child {
+  flex: 1;
+  min-height: 42px;
+}
+
+.recipe-card-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  border-radius: 999px;
+  padding: 0 16px;
+}
+
+/* Saved state: the button should stop looking pressable once it's done. */
+.recipe-card-actions button.saved,
+.recipe-card-actions button:disabled.saved {
+  background: var(--accent-bg);
+  color: var(--accent);
+  box-shadow: none;
+  opacity: 1;
+}
+
+/* ── Recipe detail ──────────────────────────────────────────── */
+
+.recipe-detail-hero {
+  position: relative;
+  aspect-ratio: 21 / 9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 18px;
+  background: var(--accent-bg);
+}
+
+.recipe-detail-hero img,
+.recipe-detail-hero .recipe-card-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 860px) {
+  .recipe-detail-hero {
+    aspect-ratio: 16 / 10;
+  }
+
+  /* Stack the title above the actions; three buttons beside an h1
+     wrap into a mess at 390px. */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .page-header .form-actions {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+  }
+
+  .page-header .form-actions > button:first-child {
+    flex: 1;
+  }
+}
+
+.recipe-meta {
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+/* Per-serving macros as bars. Numbers alone don't show proportion,
+   and proportion is the whole question with macros. */
+.macro-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.macro-row {
+  display: block;
+}
+
+.macro-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 5px;
+  font-size: 12.5px;
+}
+
+.macro-row-head strong {
+  color: var(--text-h);
+  font-weight: 700;
+}
+
+.macro-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.macro-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent-grad);
+}
+
+/* Ingredient rows: name left, quantity mid, calories right — the
+   prototype's three-column read, so the numbers form a column you
+   can scan instead of trailing each name. */
+.ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.ingredient-row:last-child {
+  border-bottom: none;
+}
+
+.ingredient-row-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.ingredient-row-qty {
+  opacity: 0.7;
+  font-size: 12.5px;
+}
+
+.ingredient-row-cal {
+  min-width: 52px;
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky action bar on mobile — "Log to today" should never be
+   scrolled off on a long recipe. */
+@media (max-width: 860px) {
+  .recipe-detail-actions {
+    position: sticky;
+    bottom: 96px;
+    z-index: 20;
+    display: flex;
+    gap: 9px;
+    padding: 12px 0;
+    background: linear-gradient(to top, var(--bg) 72%, transparent);
+  }
+
+  .recipe-detail-actions > button:first-child {
+    flex: 1;
+    min-height: 50px;
+  }
+}
+
+/* ── Settings / profile ─────────────────────────────────────── */
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-avatar {
+  width: 54px;
+  height: 54px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-2) 22%, transparent);
+  color: var(--accent-2);
+  font-family: var(--serif);
+  font-size: 22px;
+  text-transform: uppercase;
+}
+
+.profile-identity-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-identity-text strong {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 19px;
+  color: var(--text-h);
+  line-height: 1.2;
+}
+
+.profile-identity-text small {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+/* Grouped rows, iOS-settings style: one card, hairlines between. */
+.settings-group {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 2px 18px;
+  margin-bottom: 16px;
+}
+
+.settings-group-label {
+  display: block;
+  margin: 0 0 8px 6px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-row:last-child {
+  border-bottom: none;
+}
+
+.settings-row-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-row-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.settings-row-text small {
+  font-size: 11.5px;
+  opacity: 0.72;
+}
+
+.settings-row-value {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* Inline controls inside a row stay compact. */
+.settings-row input,
+.settings-row select {
+  width: auto;
+  max-width: 130px;
+  text-align: right;
+}
+
+.settings-note {
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-bg);
+}
+
+.settings-note strong {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 17px;
+  color: var(--text-h);
+  margin-bottom: 5px;
+}
+
+.settings-note p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+/* ── Shared: page subtitle + toast ──────────────────────────── */
+
+.page-subtitle {
+  margin: -8px 0 20px;
+  max-width: 62ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  opacity: 0.85;
+}
+
+.toast {
+  border-radius: 999px;
+  box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 860px) {
+  /* Clear the tab bar. */
+  .toast {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 112px;
+    z-index: 50;
+    text-align: center;
+  }
+}
